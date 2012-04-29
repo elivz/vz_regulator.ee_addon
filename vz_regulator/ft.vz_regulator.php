@@ -40,9 +40,12 @@ class Vz_regulator_ft extends EE_Fieldtype {
 	{
 		if (!$this->cache['jscss'])
 		{
-			$this->EE->cp->add_to_head('<style type="text/javascript">
-    .vz_regulator_field {}
-    .vz_regulator_field:invalid, .vz_regulator_field_invalid {}
+			$this->EE->cp->add_to_head('<style type="text/css">
+    .vz_regulator_container { position: relative; }
+    .vz_regulator_field:invalid, .vz_regulator_field:focus:invalid, .vz_regulator_field_invalid { color: #c11; border-color: #a66;}
+    .vz_regulator_hint { opacity: 0; position: absolute; left: 10px; top: 90%; max-width: 90%; padding: 4px 8px; color: #E1E8ED; font-size: 11px; background: #3E4C54; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; -webkit-box-shadow: 0 1px 5px rgba(0,0,0,0.1); -moz-box-shadow: 0 1px 5px rgba(0,0,0,0.1); box-shadow: 0 1px 5px rgba(0,0,0,0.1); -webkit-transition: all 0.2s ease-in-out; -moz-transition: all 0.2s ease-in-out; transition: all 0.2s ease-in-out; }
+    .vz_regulator_field:invalid + .vz_regulator_hint, .vz_regulator_field.invalid + .vz_regulator_hint { opacity: 1; top: 110%; }
+    .vz_regulator_hint:before { content: ""; position: absolute; left: 10px; top: -6px; width: 0; height: 0; border: 6px solid transparent; border-top: 0; border-bottom: 6px solid #3E4C54; }
 </style>');
 			$this->EE->cp->load_package_js('vz_regulator');
 			
@@ -55,18 +58,33 @@ class Vz_regulator_ft extends EE_Fieldtype {
     /**
      * Settings UI
      */
-    private function _settings_ui($settings)
+    private function _settings_ui($settings, $is_cell=FALSE)
     {
         $this->EE->lang->loadfile('vz_regulator');
         
         $pattern = isset($settings['vz_regulator_pattern']) ? $settings['vz_regulator_pattern'] : '';
+        $hint = isset($settings['vz_regulator_hint']) ? $settings['vz_regulator_hint'] : '';
         
         $settings_ui = array(
-            lang('vz_regulator_pattern_label', 'vz_regulator_pattern'),
-            form_input(array(
-                'name' =>  'vz_regulator_pattern',
-                'value' => $pattern,
-            ))
+            array(
+                '<strong>' . lang('pattern_label') .'</strong>'.
+                ($is_cell ? '' : '<br/>' . lang('pattern_sublabel')),
+                form_input(array(
+                    'name' =>  'vz_regulator_pattern',
+                    'value' => $pattern,
+                    'class' => 'matrix-textarea',
+                ))
+            ),
+            array(
+                '<strong>' . lang('hint_label') .'</strong>'.
+                ($is_cell ? '' : '<br/>' . lang('hint_sublabel')),
+                form_input(array(
+                    'name' =>  'vz_regulator_hint',
+                    'value' => $hint,
+                    'class' => 'matrix-textarea',
+                ))
+
+            )
         );
         
         return $settings_ui;
@@ -79,8 +97,10 @@ class Vz_regulator_ft extends EE_Fieldtype {
     {
         $this->EE->load->library('table');
 
-		$settings_ui = $this->_settings_ui($settings);
-        $this->EE->table->add_row($settings_ui);
+		foreach ($this->_settings_ui($settings) as $row)
+        {
+            $this->EE->table->add_row($row);
+        }
     }
     
 	/**
@@ -88,20 +108,7 @@ class Vz_regulator_ft extends EE_Fieldtype {
 	 */
     function display_cell_settings($settings)
     {
-        $this->EE->lang->loadfile('vz_regulator');
-        
-        $pattern = isset($settings['vz_regulator_pattern']) ? $settings['vz_regulator_pattern'] : '';
-        
-        $settings_ui = array(
-            lang('vz_regulator_pattern_cell_label', 'vz_regulator_pattern'),
-            form_input(array(
-                'name' =>  'vz_regulator_pattern',
-                'value' => $pattern,
-                'class' => 'matrix-textarea',
-            ))
-        );
-
-        return array($settings_ui);
+        return $this->_settings_ui($settings, TRUE);
     }
 	
     /**
@@ -109,7 +116,10 @@ class Vz_regulator_ft extends EE_Fieldtype {
      */
     function save_settings()
     {
-        return array('vz_regulator_pattern' => $this->EE->input->post('vz_regulator_pattern'));
+        return array(
+            'vz_regulator_pattern' => $this->EE->input->post('vz_regulator_pattern'),
+            'vz_regulator_hint' => $this->EE->input->post('vz_regulator_hint'),
+        );
     }
 	
 	// --------------------------------------------------------------------
@@ -124,13 +134,20 @@ class Vz_regulator_ft extends EE_Fieldtype {
         $name = $name ? $name : $this->field_name;
         
         $pattern = isset($this->settings['vz_regulator_pattern']) ? $this->settings['vz_regulator_pattern'] : '';
+        $hint = isset($this->settings['vz_regulator_hint']) ? $this->settings['vz_regulator_hint'] : '';
         
-        return form_input(array(
+        $output = '<div class="vz_regulator_container">';
+        $output .= form_input(array(
             'name' => $name,
             'value' => $data,
-            'class' => 'vz_regulator_field',
-            'pattern' => $pattern
+            'class' => 'vz_regulator_field matrix-textarea',
+            'pattern' => $pattern,
+            'title' => $hint,
         ));
+        $output .= $hint ? '<div class="vz_regulator_hint">' . $hint . '</div>' : '';
+        $output .= '</div>';
+
+        return $output;
 	}
     
     /**
