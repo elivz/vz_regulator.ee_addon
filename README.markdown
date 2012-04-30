@@ -5,6 +5,11 @@ An Expression Engine fieldtype that allows for regular expression validation of 
 
 Take a look at [HTML5Pattern](http://html5pattern.com/) for a library of validation expressions you can use.
 
+Compatibility
+-------------
+
+Requires jQuery 1.4.2+ in the control panel. Formatting hints will not be displayed in IE 7 and below.
+
 Installation
 ------------
 
