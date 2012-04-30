@@ -130,6 +130,12 @@ class Vz_regulator_ft extends EE_Fieldtype {
         
         $pattern = isset($this->settings['vz_regulator_pattern']) ? $this->settings['vz_regulator_pattern'] : '';
         $hint = isset($this->settings['vz_regulator_hint']) ? $this->settings['vz_regulator_hint'] : '';
+
+        // Safecracker escapes the pattern, breaking it
+        if (REQ == 'PAGE')
+        {
+            $pattern = str_replace('\\', '\\\\', $pattern);
+        }
         
         $output = '<div class="vz_regulator_container">';
         $output .= form_input(array(
