@@ -10,6 +10,8 @@ Compatibility
 
 Requires jQuery 1.4.2+ in the control panel. Formatting hints will not be displayed in IE 7 and below.
 
+Does not quite work in Safecracker forms yet. I'm working on it.
+
 Installation
 ------------
 
