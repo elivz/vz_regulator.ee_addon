@@ -40,7 +40,9 @@ class Vz_regulator_ft extends EE_Fieldtype {
 	{
 		if (!$this->cache['jscss'])
 		{
-			$this->EE->cp->add_to_head('<style type="text/css">.vz_regulator_container{position:relative}.vz_regulator_field:invalid,.vz_regulator_field:invalid:focus{color:#c11;border-color:#a66}.vz_regulator_field.invalid,.vz_regulator_field.invalid:focus{color:#c11;border-color:#a66}.vz_regulator_hint{opacity:0;position:absolute;z-index:100;left:5px;top:24px;max-width:90%;padding:4px 6px;pointer-events:none;color:#e1e8ed;font-size:11px;background:#3e4c54;-webkit-border-radius:3px;-moz-border-radius:3px;border-radius:3px;-webkit-box-shadow:0 1px 5px rgba(0,0,0,0.1);-moz-box-shadow:0 1px 5px rgba(0,0,0,0.1);box-shadow:0 1px 5px rgba(0,0,0,0.1);-webkit-transition:all .2s ease-in-out;-moz-transition:all .2s ease-in-out;-ms-transition:all .2s ease-in-out;-o-transition:all .2s ease-in-out;transition:all .2s ease-in-out}.vz_regulator_field:invalid+.vz_regulator_hint{top:26px}.vz_regulator_field.invalid+.vz_regulator_hint{top:26px}.vz_regulator_field:invalid:focus+.vz_regulator_hint{opacity:1}.vz_regulator_field.invalid:focus+.vz_regulator_hint{opacity:1}.vz_regulator_hint:before{content:"";position:absolute;left:10px;top:-6px;width:0;height:0;border:6px solid transparent;border-top:0;border-bottom:6px solid #3e4c54}</style><script type="text/javascript">(function(b){var a,c;c=function(){b(".vz_regulator_field").each(a);b("#publishForm").delegate(".vz_regulator_field","keyup",a)};a=function(){var a=!1;""!==this.value&&(a=!RegExp(this.getAttribute("pattern"),"g").test(this.value));b(this).toggleClass("invalid",a)};!("pattern"in document.createElement("input"))&&b(document).bind("ready",c)})(jQuery);</script>');
+            $styles = '<style type="text/css">' . file_get_contents(PATH_THIRD . '/vz_regulator/assets/styles.min.css') . '</style>';
+            $scripts = '<script type="text/javascript">// <![CDATA[ ' . file_get_contents(PATH_THIRD . '/vz_regulator/assets/scripts.min.js') . ' // ]]></script>';
+			$this->EE->cp->add_to_head($styles . $scripts);
 			
 			$this->cache['jscss'] = TRUE;
 		}
