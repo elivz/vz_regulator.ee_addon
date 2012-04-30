@@ -19,7 +19,7 @@
     position: absolute;
     z-index: 100;
     left: 5px;
-    top: 24px;
+    top: 2em;
     max-width: 90%;
     padding: 4px 6px;
     pointer-events: none;
@@ -42,10 +42,10 @@
 /* Display the tooltip when the field doesn't pass validation */
 /* Again, declared twice for IE */
 .vz_regulator_field:invalid + .vz_regulator_hint {
-    top: 26px;
+    top: 2.4em;
 }
 .vz_regulator_field.invalid + .vz_regulator_hint {
-    top: 26px;
+    top: 2.4em;
 }
 .vz_regulator_field:invalid:focus + .vz_regulator_hint {
     opacity: 1;
@@ -58,6 +58,7 @@
 .vz_regulator_hint:before {
     content: "";
     position: absolute;
+    opacity: 0;
     left: 10px;
     top: -6px;
     width: 0;
@@ -65,4 +66,10 @@
     border: 6px solid transparent;
     border-top: 0;
     border-bottom: 6px solid #3E4C54;
+}
+.vz_regulator_field:invalid:focus + .vz_regulator_hint:before {
+    opacity: 1;
+}
+.vz_regulator_field.invalid:focus + .vz_regulator_hint:before {
+    opacity: 1;
 }
