@@ -42,7 +42,7 @@ class Vz_regulator_ft extends EE_Fieldtype {
 		{
 			$this->EE->cp->add_to_head('<style type="text/css">
     .vz_regulator_container { position: relative; }
-    .vz_regulator_field:invalid, .vz_regulator_field:focus:invalid, .vz_regulator_field_invalid { color: #c11; border-color: #a66;}
+    .vz_regulator_field:invalid, .vz_regulator_field:focus:invalid, .vz_regulator_field.invalid, .vz_regulator_field.invalid:focus { color: #c11; border-color: #a66;}
     .vz_regulator_hint { opacity: 0; position: absolute; z-index: 100; left: 5px; top: 24px; max-width: 90%; padding: 4px 6px; pointer-events: none; color: #E1E8ED; font-size: 11px; background: #3E4C54; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; -webkit-box-shadow: 0 1px 5px rgba(0,0,0,0.1); -moz-box-shadow: 0 1px 5px rgba(0,0,0,0.1); box-shadow: 0 1px 5px rgba(0,0,0,0.1); -webkit-transition: all 0.2s ease-in-out; -moz-transition: all 0.2s ease-in-out; transition: all 0.2s ease-in-out; }
     .vz_regulator_field:invalid + .vz_regulator_hint, .vz_regulator_field.invalid + .vz_regulator_hint { top: 26px; }
     .vz_regulator_field:focus:invalid + .vz_regulator_hint, .vz_regulator_field.invalid:focus + .vz_regulator_hint { opacity: 1; }

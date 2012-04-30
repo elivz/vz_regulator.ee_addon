@@ -9,7 +9,9 @@
          * Start the script
          */
         init: function() {
-            $('#publishForm').delegate('.vz_regulator_field', 'keyup', vz_regulator.check_validity);
+            if (vz_regulator.not_natively_supported) {
+                $('#publishForm').delegate('.vz_regulator_field', 'keyup', vz_regulator.check_validity);
+            }
         },
 
         /*
@@ -27,36 +29,18 @@
             var $this = $(this),
                 is_invalid = false;
 
-            // Fake support, if necessary
-            if (vz_regulator.not_natively_supported) {
+            if ($this.val() !== '') {
                 // Test against the regular expression
-                var pattern = new RegExp($this.attr('pattern', 'g'));
+                var pattern = new RegExp($this.attr('patternx'), 'g');
                 is_invalid = !pattern.test($this.val());
-
-                // Set a class so we can style the input
-                $this.toggleClass('invalid', is_invalid);
-            } else {
-                // Just use the invalidity status from the browser
-                is_invalid = $this.is(':invalid');
             }
 
-            // Update the error message
-            vz_regulator.set_hint_visibility.apply(this, [is_invalid]);
-        },
-
-        set_hint_visibility : function(is_invalid) {
-            var $this = $(this),
-                $hint = $this.next();
-
-            if (is_invalid) {
-                $hint.fadeIn(200);
-            } else {
-                $hint.fadeOut(100);
-            }
+            // Set a class so we can style the input
+            $this.toggleClass('invalid', is_invalid);
         }
     };
 
     // Document is ready
-    //$(document).bind('ready', vz_regulator.init);
+    $(document).bind('ready', vz_regulator.init);
 
 })(jQuery);
