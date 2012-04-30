@@ -10,6 +10,10 @@
          */
         init: function() {
             if (vz_regulator.not_natively_supported) {
+                // Initial check
+                $('.vz_regulator_field').each(vz_regulator.check_validity);
+
+                // Continute checking after each keystroke
                 $('#publishForm').delegate('.vz_regulator_field', 'keyup', vz_regulator.check_validity);
             }
         },
