@@ -35,7 +35,7 @@
 
             if ($this.val() !== '') {
                 // Test against the regular expression
-                var pattern = new RegExp($this.attr('patternx'), 'g');
+                var pattern = new RegExp($this.attr('pattern'), 'g');
                 is_invalid = !pattern.test($this.val());
             }
 

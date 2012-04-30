@@ -3,7 +3,7 @@ VZ Regulator
 
 An Expression Engine fieldtype that allows for regular expression validation of text inputs. Also compatible with Pixel & Tonic Matrix and Low Variables.
 
-Take a look at (HTML5Pattern)[http://html5pattern.com/] for a library of validation expressions you can use.
+Take a look at [HTML5Pattern](http://html5pattern.com/) for a library of validation expressions you can use.
 
 Installation
 ------------
