@@ -13,7 +13,7 @@ class Vz_regulator_ft extends EE_Fieldtype {
 
 	public $info = array(
 		'name'			=> 'VZ Regulator',
-		'version'		=> '1.0.0'
+		'version'		=> '1.0.1'
 	);
 	
 	/**
@@ -40,7 +40,7 @@ class Vz_regulator_ft extends EE_Fieldtype {
 	{
 		if (!$this->cache['jscss'])
 		{
-            $styles = '<style type="text/css">' . file_get_contents(PATH_THIRD . '/vz_regulator/assets/styles.min.css') . '</style>';
+            $styles = '<style type="text/css">' . file_get_contents(PATH_THIRD . '/vz_regulator/assets/styles.min.css') . '</style>' . NL;
             $scripts = '<script type="text/javascript">// <![CDATA[ ' . file_get_contents(PATH_THIRD . '/vz_regulator/assets/scripts.min.js') . ' // ]]></script>';
 			$this->EE->cp->add_to_head($styles . $scripts);
 			
@@ -105,6 +105,14 @@ class Vz_regulator_ft extends EE_Fieldtype {
     {
         return $this->_settings_ui($settings, TRUE);
     }
+    
+    /**
+     * Display Low Variable Settings
+     */
+    function display_var_settings($settings)
+    {
+        return $this->_settings_ui($settings);
+    }
 	
     /**
      * Save Field Settings
@@ -115,6 +123,14 @@ class Vz_regulator_ft extends EE_Fieldtype {
             'vz_regulator_pattern' => $this->EE->input->post('vz_regulator_pattern'),
             'vz_regulator_hint' => $this->EE->input->post('vz_regulator_hint'),
         );
+    }
+
+    /**
+     * Save Field Settings
+     */
+    function save_var_settings()
+    {
+        return $this->save_settings();
     }
 	
 	// --------------------------------------------------------------------
