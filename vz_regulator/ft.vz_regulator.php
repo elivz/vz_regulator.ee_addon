@@ -8,58 +8,58 @@
  * @license   http://creativecommons.org/licenses/by-sa/3.0/ Attribution-Share Alike 3.0 Unported
  *
  */
- 
+
 class Vz_regulator_ft extends EE_Fieldtype {
 
-	public $info = array(
-		'name'			=> 'VZ Regulator',
-		'version'		=> '1.0.1'
-	);
-	
-	/**
-	 * Fieldtype Constructor
-	 */
-	function Vz_regulator_ft()
-	{
-		parent::EE_Fieldtype();
+    public $info = array(
+        'name'          => 'VZ Regulator',
+        'version'       => '1.0.2'
+    );
 
-		if (!isset($this->EE->session->cache['vz_regulator']))
-		{
-			$this->EE->session->cache['vz_regulator'] = array('jscss' => FALSE);
-		}
-		$this->cache =& $this->EE->session->cache['vz_regulator'];
-	}
-	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Include the JS and CSS files,
-	 * but only the first time
-	 */
-	private function _include_jscss()
-	{
-		if (!$this->cache['jscss'])
-		{
+    /**
+     * Fieldtype Constructor
+     */
+    function Vz_regulator_ft()
+    {
+        parent::EE_Fieldtype();
+
+        if (!isset($this->EE->session->cache['vz_regulator']))
+        {
+            $this->EE->session->cache['vz_regulator'] = array('jscss' => FALSE);
+        }
+        $this->cache =& $this->EE->session->cache['vz_regulator'];
+    }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Include the JS and CSS files,
+     * but only the first time
+     */
+    private function _include_jscss()
+    {
+        if (!$this->cache['jscss'])
+        {
             $styles = '<style type="text/css">' . file_get_contents(PATH_THIRD . '/vz_regulator/assets/styles.min.css') . '</style>' . NL;
             $scripts = '<script type="text/javascript">// <![CDATA[ ' . file_get_contents(PATH_THIRD . '/vz_regulator/assets/scripts.min.js') . ' // ]]></script>';
-			$this->EE->cp->add_to_head($styles . $scripts);
-			
-			$this->cache['jscss'] = TRUE;
-		}
-	}
-	
-	// --------------------------------------------------------------------
-    
+            $this->EE->cp->add_to_head($styles . $scripts);
+
+            $this->cache['jscss'] = TRUE;
+        }
+    }
+
+    // --------------------------------------------------------------------
+
     /**
      * Settings UI
      */
     private function _settings_ui($settings, $is_cell=FALSE)
     {
         $this->EE->lang->loadfile('vz_regulator');
-        
+
         $pattern = isset($settings['vz_regulator_pattern']) ? $settings['vz_regulator_pattern'] : '';
         $hint = isset($settings['vz_regulator_hint']) ? $settings['vz_regulator_hint'] : '';
-        
+
         $settings_ui = array(
             array(
                 '<strong>' . lang('pattern_label') .'</strong>'.
@@ -81,10 +81,10 @@ class Vz_regulator_ft extends EE_Fieldtype {
 
             )
         );
-        
+
         return $settings_ui;
     }
-    
+
     /**
      * Display Field Settings
      */
@@ -92,20 +92,20 @@ class Vz_regulator_ft extends EE_Fieldtype {
     {
         $this->EE->load->library('table');
 
-		foreach ($this->_settings_ui($settings) as $row)
+        foreach ($this->_settings_ui($settings) as $row)
         {
             $this->EE->table->add_row($row);
         }
     }
-    
-	/**
-	 * Display Cell Settings
-	 */
+
+    /**
+     * Display Cell Settings
+     */
     function display_cell_settings($settings)
     {
         return $this->_settings_ui($settings, TRUE);
     }
-    
+
     /**
      * Display Low Variable Settings
      */
@@ -113,7 +113,7 @@ class Vz_regulator_ft extends EE_Fieldtype {
     {
         return $this->_settings_ui($settings);
     }
-	
+
     /**
      * Save Field Settings
      */
@@ -132,18 +132,18 @@ class Vz_regulator_ft extends EE_Fieldtype {
     {
         return $this->save_settings();
     }
-	
-	// --------------------------------------------------------------------
-	
-	/**
-	 * Display Field on Publish
-	 */
-	function display_field($data, $name=FALSE)
-	{
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Display Field on Publish
+     */
+    function display_field($data, $name=FALSE)
+    {
         $this->_include_jscss();
-        
+
         $name = $name ? $name : $this->field_name;
-        
+
         $pattern = isset($this->settings['vz_regulator_pattern']) ? $this->settings['vz_regulator_pattern'] : '';
         $hint = isset($this->settings['vz_regulator_hint']) ? $this->settings['vz_regulator_hint'] : '';
 
@@ -152,7 +152,7 @@ class Vz_regulator_ft extends EE_Fieldtype {
         {
             $pattern = str_replace('\\', '\\\\', $pattern);
         }
-        
+
         $output = '<div class="vz_regulator_container">';
         $output .= form_input(array(
             'name' => $name,
@@ -165,8 +165,8 @@ class Vz_regulator_ft extends EE_Fieldtype {
         $output .= '</div>';
 
         return $output;
-	}
-    
+    }
+
     /**
      * Display Cell
      */
@@ -174,7 +174,7 @@ class Vz_regulator_ft extends EE_Fieldtype {
     {
         return $this->display_field($data, $this->cell_name);
     }
-    
+
     /**
      * Display Low Variable
      */
@@ -182,9 +182,9 @@ class Vz_regulator_ft extends EE_Fieldtype {
     {
         return $this->display_field($data);
     }
-    
+
     // --------------------------------------------------------------------
-    
+
     /**
      * Validation to prevent saving entries that don't match
      */
@@ -192,7 +192,7 @@ class Vz_regulator_ft extends EE_Fieldtype {
     {
         if ($data == '') return TRUE;
 
-        $pattern = isset($this->settings['vz_regulator_pattern']) ? '#' . preg_quote($this->settings['vz_regulator_pattern'], '#') . '#' : '';
+        $pattern = isset($this->settings['vz_regulator_pattern']) ? '#' . str_replace('#', '\#', $this->settings['vz_regulator_pattern']) . '#' : '';
         $hint = isset($this->settings['vz_regulator_hint']) ? $this->settings['vz_regulator_hint'] : '';
 
         if ($pattern == '' || preg_match($pattern, $data) > 0)
@@ -203,7 +203,7 @@ class Vz_regulator_ft extends EE_Fieldtype {
         {
             return $hint;
         }
-    } 
+    }
 
 }
 
