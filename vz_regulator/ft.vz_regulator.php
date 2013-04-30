@@ -21,7 +21,7 @@ class Vz_regulator_ft extends EE_Fieldtype {
      */
     function Vz_regulator_ft()
     {
-        parent::EE_Fieldtype();
+        EE_Fieldtype::__construct();
 
         if (!isset($this->EE->session->cache['vz_regulator']))
         {
