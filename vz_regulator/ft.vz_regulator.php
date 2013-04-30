@@ -13,7 +13,7 @@ class Vz_regulator_ft extends EE_Fieldtype {
 
     public $info = array(
         'name'          => 'VZ Regulator',
-        'version'       => '1.0.2'
+        'version'       => '1.0.3'
     );
 
     /**
