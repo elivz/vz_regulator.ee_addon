@@ -16,7 +16,7 @@ class Vz_regulator_ft extends EE_Fieldtype {
         'version' => '1.1.0'
     );
 
-    var $debug = TRUE;
+    var $debug = FALSE;
 
 
     // --------------------------------------------------------------------
