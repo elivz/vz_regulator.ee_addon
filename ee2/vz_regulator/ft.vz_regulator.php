@@ -12,57 +12,73 @@
 class Vz_regulator_ft extends EE_Fieldtype {
 
     public $info = array(
-        'name'          => 'VZ Regulator',
-        'version'       => '1.0.3'
+        'name'    => 'VZ Regulator',
+        'version' => '1.1.0'
     );
+
+    var $debug = TRUE;
+
+
+    // --------------------------------------------------------------------
+
 
     /**
      * Fieldtype Constructor
      */
-    function Vz_regulator_ft()
+    public function __construct()
     {
-        EE_Fieldtype::__construct();
+        parent::__construct();
 
-        if (!isset($this->EE->session->cache['vz_regulator']))
-        {
-            $this->EE->session->cache['vz_regulator'] = array('jscss' => FALSE);
-        }
-        $this->cache =& $this->EE->session->cache['vz_regulator'];
+        // Load the language file
+        ee()->lang->loadfile('vz_regulator');
     }
 
+    /*
+     * Register acceptable content types
+     */
+    public function accepts_content_type($name)
+    {
+        return ($name == 'channel' || $name == 'grid');
+    }
+
+
     // --------------------------------------------------------------------
+
 
     /**
-     * Include the JS and CSS files,
-     * but only the first time
+     * Include the JS and CSS files, but only the first time
      */
-    private function _include_jscss()
+    private function _include_js_css($content_type='field')
     {
-        if (!$this->cache['jscss'])
+        if ( ! ee()->session->cache(__CLASS__, 'js_css'))
         {
-            $styles = '<style type="text/css">' . file_get_contents(PATH_THIRD . '/vz_regulator/assets/styles.min.css') . '</style>' . NL;
-            $scripts = '<script type="text/javascript">// <![CDATA[ ' . file_get_contents(PATH_THIRD . '/vz_regulator/assets/scripts.min.js') . ' // ]]></script>';
-            $this->EE->cp->add_to_head($styles . $scripts);
+            // Output stylesheet
+            $css = file_get_contents(PATH_THIRD . '/vz_regulator/assets/styles' . ($this->debug ? '' : '.min') . '.css');
+            ee()->cp->add_to_head('<style type="text/css">' . $css . '</style>');
 
-            $this->cache['jscss'] = TRUE;
+            $scripts = file_get_contents(PATH_THIRD . '/vz_regulator/assets/scripts' . ($this->debug ? '' : '.min') . '.js');
+            ee()->javascript->output($scripts);
+
+            // Make sure we only load them once
+            ee()->session->set_cache(__CLASS__, 'js_css', TRUE);
         }
     }
 
+
     // --------------------------------------------------------------------
+
 
     /**
      * Settings UI
      */
     private function _settings_ui($settings, $is_cell=FALSE)
     {
-        $this->EE->lang->loadfile('vz_regulator');
-
         $pattern = isset($settings['vz_regulator_pattern']) ? $settings['vz_regulator_pattern'] : '';
         $hint = isset($settings['vz_regulator_hint']) ? $settings['vz_regulator_hint'] : '';
 
         $settings_ui = array(
             array(
-                '<strong>' . lang('pattern_label') .'</strong>'.
+                lang('pattern_label') .
                 ($is_cell ? '' : '<br/>' . lang('pattern_sublabel')),
                 form_input(array(
                     'name' =>  'vz_regulator_pattern',
@@ -71,7 +87,7 @@ class Vz_regulator_ft extends EE_Fieldtype {
                 ))
             ),
             array(
-                '<strong>' . lang('hint_label') .'</strong>'.
+                lang('hint_label') .
                 ($is_cell ? '' : '<br/>' . lang('hint_sublabel')),
                 form_input(array(
                     'name' =>  'vz_regulator_hint',
@@ -88,20 +104,32 @@ class Vz_regulator_ft extends EE_Fieldtype {
     /**
      * Display Field Settings
      */
-    function display_settings($settings)
+    public function display_settings($settings)
     {
-        $this->EE->load->library('table');
-
         foreach ($this->_settings_ui($settings) as $row)
         {
-            $this->EE->table->add_row($row);
+            ee()->table->add_row($row);
         }
     }
 
     /**
-     * Display Cell Settings
+     * Display Grid Cell Settings
      */
-    function display_cell_settings($settings)
+    public function grid_display_settings($settings)
+    {
+        $grid_settings = array();
+        foreach ($this->_settings_ui($settings, true) as $row)
+        {
+            $grid_settings[] = $this->grid_settings_row($row[0], $row[1]);
+        }
+
+        return $grid_settings;
+    }
+
+    /**
+     * Display Matrix Cell Settings
+     */
+    public function display_cell_settings($settings)
     {
         return $this->_settings_ui($settings, TRUE);
     }
@@ -109,38 +137,55 @@ class Vz_regulator_ft extends EE_Fieldtype {
     /**
      * Display Low Variable Settings
      */
-    function display_var_settings($settings)
+    public function display_var_settings($settings)
     {
         return $this->_settings_ui($settings);
     }
 
+
+    // --------------------------------------------------------------------
+
+
     /**
      * Save Field Settings
      */
-    function save_settings()
+    function save_settings($settings)
     {
         return array(
-            'vz_regulator_pattern' => $this->EE->input->post('vz_regulator_pattern'),
-            'vz_regulator_hint' => $this->EE->input->post('vz_regulator_hint'),
+            'vz_regulator_pattern' => $settings['vz_regulator_pattern'],
+            'vz_regulator_hint'    => $settings['vz_regulator_hint'],
         );
     }
 
     /**
-     * Save Field Settings
+     * Save Matrix Cell Settings
      */
-    function save_var_settings()
+    function save_cell_settings($settings)
+    {
+        return array_merge(array(
+            'vz_regulator_pattern' => '',
+            'vz_regulator_hint'    => ''
+        ), $settings);
+    }
+
+    /**
+     * Save Low Variables Settings
+     */
+    public function save_var_settings()
     {
         return $this->save_settings();
     }
 
+
     // --------------------------------------------------------------------
+
 
     /**
      * Display Field on Publish
      */
     function display_field($data, $name=FALSE)
     {
-        $this->_include_jscss();
+        $this->_include_js_css();
 
         $name = $name ? $name : $this->field_name;
 
@@ -183,14 +228,26 @@ class Vz_regulator_ft extends EE_Fieldtype {
         return $this->display_field($data);
     }
 
+
     // --------------------------------------------------------------------
+
 
     /**
      * Validation to prevent saving entries that don't match
      */
     function validate($data)
     {
-        if ($data == '') return TRUE;
+        if ($data == '')
+        {
+            if ( ! empty($this->settings['field_required']) || ! empty($this->settings['col_required']) )
+            {
+                return lang('required');
+            }
+            else
+            {
+                return TRUE;
+            }
+        }
 
         $pattern = isset($this->settings['vz_regulator_pattern']) ? '#' . str_replace('#', '\#', $this->settings['vz_regulator_pattern']) . '#' : '';
         $hint = isset($this->settings['vz_regulator_hint']) ? $this->settings['vz_regulator_hint'] : '';
@@ -203,6 +260,14 @@ class Vz_regulator_ft extends EE_Fieldtype {
         {
             return $hint;
         }
+    }
+
+    /**
+     * Validate Matrix Cell
+     */
+    public function validate_cell($data)
+    {
+        return $this->validate($data);
     }
 
 }

@@ -13,7 +13,7 @@
             $('.vz_regulator_field').each(vz_regulator.check_validity);
 
             // Continute checking after each keystroke
-            $('#publishForm').delegate('.vz_regulator_field', 'keyup', vz_regulator.check_validity);
+            $('#publishForm').on('keyup change', '.vz_regulator_field', vz_regulator.check_validity);
         },
 
         /*
@@ -25,7 +25,7 @@
             if (this.value !== '') {
                 // Test against the regular expression
                 var pattern = new RegExp(this.getAttribute('pattern'), 'g');
-                is_invalid = !pattern.test(this.value);
+                is_invalid = ! pattern.test(this.value);
             }
 
             // Set a class so we can style the input
@@ -37,7 +37,7 @@
          */
         not_natively_supported : (function() {
             var input_element = document.createElement('input');
-            return !('pattern' in input_element);
+            return ! ('pattern' in input_element);
         })()
     };
 

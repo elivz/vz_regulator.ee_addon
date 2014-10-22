@@ -8,9 +8,9 @@ Take a look at [HTML5Pattern](http://html5pattern.com/) for a library of validat
 Compatibility
 -------------
 
-Compatible with Safecracker, Matrix, and Low Variables
+Compatible with Safecracker, Grid, Matrix, and Low Variables
 
-Requires jQuery 1.4.2+ in the control panel. Formatting hints will not be displayed in IE 7 and below.
+Requires EE >= 2.6 and the jQuery module. Formatting hints will not be displayed in IE 7 and below.
 
 Installation
 ------------
