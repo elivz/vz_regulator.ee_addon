@@ -13,7 +13,7 @@ class Vz_regulator_ft extends EE_Fieldtype {
 
     public $info = array(
         'name'    => 'VZ Regulator',
-        'version' => '1.1.0'
+        'version' => '1.1.1'
     );
 
     var $debug = FALSE;
@@ -56,6 +56,7 @@ class Vz_regulator_ft extends EE_Fieldtype {
             $css = file_get_contents(PATH_THIRD . '/vz_regulator/assets/styles' . ($this->debug ? '' : '.min') . '.css');
             ee()->cp->add_to_head('<style type="text/css">' . $css . '</style>');
 
+            // Output Javascript
             $scripts = file_get_contents(PATH_THIRD . '/vz_regulator/assets/scripts' . ($this->debug ? '' : '.min') . '.js');
             ee()->javascript->output($scripts);
 
@@ -139,7 +140,32 @@ class Vz_regulator_ft extends EE_Fieldtype {
      */
     public function display_var_settings($settings)
     {
-        return $this->_settings_ui($settings);
+        $pattern = isset($settings['vz_regulator_pattern']) ? $settings['vz_regulator_pattern'] : '';
+        $hint = isset($settings['vz_regulator_hint']) ? $settings['vz_regulator_hint'] : '';
+
+        $settings_ui = array(
+            array(
+                '<strong class="low-label">' . lang('pattern_label') . '</strong>' .
+                '<div class="low-var-notes">' . lang('pattern_sublabel') . '</div>',
+                form_input(array(
+                    'name' =>  'variable_settings[vz_regulator][vz_regulator_pattern]',
+                    'value' => $pattern,
+                    'class' => 'matrix-textarea',
+                ))
+            ),
+            array(
+                '<strong class="low-label">' . lang('hint_label') . '</strong>' .
+                '<div class="low-var-notes">' . lang('hint_sublabel') . '</div>',
+                form_input(array(
+                    'name' =>  'variable_settings[vz_regulator][vz_regulator_hint]',
+                    'value' => $hint,
+                    'class' => 'matrix-textarea',
+                ))
+
+            )
+        );
+
+        return $settings_ui;
     }
 
 
@@ -171,9 +197,9 @@ class Vz_regulator_ft extends EE_Fieldtype {
     /**
      * Save Low Variables Settings
      */
-    public function save_var_settings()
+    public function save_var_settings($settings)
     {
-        return $this->save_settings();
+        return $this->save_settings($settings);
     }
 
 

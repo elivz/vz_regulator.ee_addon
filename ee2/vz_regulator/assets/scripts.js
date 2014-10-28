@@ -13,7 +13,7 @@
             $('.vz_regulator_field').each(vz_regulator.check_validity);
 
             // Continute checking after each keystroke
-            $('#publishForm').on('keyup change', '.vz_regulator_field', vz_regulator.check_validity);
+            $('#mainContent').on('keyup change', '.vz_regulator_field', vz_regulator.check_validity);
         },
 
         /*

@@ -1,5 +1,7 @@
 .vz_regulator_container {
     position: relative;
+}
+.publish_vz_address vz_regulator_container {
     margin-top: 11px;
 }
 
