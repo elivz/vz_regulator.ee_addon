@@ -10,6 +10,8 @@ $lang = array(
 'hint_label' => 'Error message',
 'hint_sublabel' => 'A short description of what should be entered in the field, which will be displayed when the validation fails.',
 
+'vz_regulator_required' => 'This field is required',
+
 ''=>''
 );
 

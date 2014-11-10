@@ -265,9 +265,12 @@ class Vz_regulator_ft extends EE_Fieldtype {
     {
         if ($data == '')
         {
-            if ( ! empty($this->settings['field_required']) || ! empty($this->settings['col_required']) )
-            {
-                return lang('required');
+            if (
+                (isset($this->settings['field_required']) && $this->settings['field_required'] == 'y')
+                ||
+                (isset($this->settings['col_required']) && $this->settings['col_required'] == 'y' )
+            ) {
+                return lang('vz_regulator_required');
             }
             else
             {
